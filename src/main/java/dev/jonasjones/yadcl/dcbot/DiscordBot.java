@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -60,15 +61,18 @@ public class DiscordBot extends ListenerAdapter {
             } else {
                 setBotStatus(ModConfigs.BOT_STATUS);
             }
+        } catch (InvalidTokenException e) {
+            LOGGER.error("The provided token is invalid!");
         } catch (Exception e) {
             LOGGER.error("Failed to start Discord bot. Check the provided discord token in the config file.");
+            LOGGER.error(String.valueOf(e));
             return;
         }
         isBotRunning = true;
     }
 
     public static void stopBot() {
-        if (!isBotRunning) {
+        if (!isBotRunning || jda == null) {
             return;
         }
         jda.shutdown();
