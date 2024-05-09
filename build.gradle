@@ -23,18 +23,19 @@ repositories {
 }
 
 loom {
-    splitEnvironmentSourceSets()
-
+	splitEnvironmentSourceSets()
 	mods {
 		"modid" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
 	}
-
 }
 
 dependencies {
+	compileOnly 'org.projectlombok:lombok:1.18.32'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -43,14 +44,10 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	compileOnly 'org.projectlombok:lombok:1.18.32'
-	annotationProcessor 'org.projectlombok:lombok:1.18.32'
-
 	implementation('net.dv8tion:JDA:5.0.0-beta.17') {
 		exclude module: 'opus-java'
 	}
 	shadow 'net.dv8tion:JDA:5.0.0-beta.17'
-	
 }
 
 tasks.withType(ShadowJar).configureEach {
@@ -63,21 +60,19 @@ tasks.withType(ShadowJar).configureEach {
 
 remapJar {
 	from('LICENSE') // Include license
-
 	inputFile.set shadowJar.archiveFile
 	dependsOn shadowJar
 }
 
 processResources {
 	inputs.property "version", project.version
-
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 17
 }
 
 java {
@@ -85,9 +80,8 @@ java {
 	// if it is present.
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
@@ -99,12 +93,10 @@ jar {
 // configure the maven publication
 publishing {
 	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
+		mavenJava(MavenPublication) {
 			from components.java
 		}
 	}
-
 	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
 		// Add repositories to publish to here.
