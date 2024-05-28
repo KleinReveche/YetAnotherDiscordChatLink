@@ -26,7 +26,5 @@ public class YetAnotherDiscordChatLink implements ModInitializer {
         // Start the bot
         discordBot = new DiscordBot(ModConfigs.TOKEN, ModConfigs.CHANNEL_ID);
         discordBot.startBot();
-        // send starting message
-        sendToDiscord("Server is starting up.");
     }
 }

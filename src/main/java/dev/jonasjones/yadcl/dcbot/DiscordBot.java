@@ -69,6 +69,14 @@ public class DiscordBot extends ListenerAdapter {
             return;
         }
         isBotRunning = true;
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000); // janky solution to ensure that the message is being sent. Discord is a little slow sometimes
+                sendToDiscord("Server is starting up.");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     public static void stopBot() {
